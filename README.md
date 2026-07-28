@@ -12,10 +12,16 @@ npm run dev
 
 ## 배포 (GitHub + Vercel)
 
-1. 이 저장소를 GitHub에 push
-2. [Vercel](https://vercel.com/new)에서 해당 저장소를 Import
-3. Framework Preset: **Vite** (자동 감지), Build `npm run build`, Output `dist`
-4. Deploy 후 나온 URL을 휴대폰 브라우저에서 열고, 홈 화면에 추가
+### GitHub (코드 + Pages)
+
+- 저장소: https://github.com/kyungalee1/glumemo
+- Pages URL: https://kyungalee1.github.io/glumemo/ (`main` push 시 Actions로 자동 배포)
+
+### Vercel (권장 · 짧은 URL)
+
+1. [Vercel Import](https://vercel.com/new/import?s=https://github.com/kyungalee1/glumemo) 에서 저장소 연결
+2. Framework: **Vite** (자동), Build `npm run build`, Output `dist`
+3. Deploy 후 나온 `*.vercel.app` URL을 휴대폰에서 사용
 
 PC를 켜둘 필요 없이, 배포된 URL로 언제든 사용할 수 있습니다.
 
