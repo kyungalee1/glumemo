@@ -56,7 +56,9 @@ em,
 .brand,
 .glucose-big,
 .history-main strong,
-.stat-grid strong,
+.stat-overall strong,
+.stat-meals strong,
+.stat-high strong,
 .caution-list em {
   font-family: inherit;
 }

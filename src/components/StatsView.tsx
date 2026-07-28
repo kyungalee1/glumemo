@@ -96,24 +96,26 @@ export function StatsView({ entries }: Props) {
         </button>
       </div>
 
-      <div className="stat-grid">
-        <div>
-          <span>평균</span>
+      <div className="stat-summary">
+        <div className="stat-overall">
+          <span>전체 평균</span>
           <strong>{avg ?? '—'}</strong>
         </div>
-        <div>
-          <span>아침 평균</span>
-          <strong>{breakfastAvg ?? '—'}</strong>
+        <div className="stat-meals">
+          <div>
+            <span>아침</span>
+            <strong>{breakfastAvg ?? '—'}</strong>
+          </div>
+          <div>
+            <span>점심</span>
+            <strong>{lunchAvg ?? '—'}</strong>
+          </div>
+          <div>
+            <span>저녁</span>
+            <strong>{dinnerAvg ?? '—'}</strong>
+          </div>
         </div>
-        <div>
-          <span>점심 평균</span>
-          <strong>{lunchAvg ?? '—'}</strong>
-        </div>
-        <div>
-          <span>저녁 평균</span>
-          <strong>{dinnerAvg ?? '—'}</strong>
-        </div>
-        <div>
+        <div className="stat-high">
           <span>{HIGH_GLUCOSE}+ 횟수</span>
           <strong>{highCount}</strong>
         </div>
