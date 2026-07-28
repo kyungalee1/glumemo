@@ -42,7 +42,6 @@ export function HistoryView({ entries, onSave, onDelete }: Props) {
         <div>
           <p className="eyebrow">전체 기록</p>
           <h2>히스토리</h2>
-          <p className="sub">총 {entries.length}건 · 지난 기록을 수정하거나 보완할 수 있어요.</p>
         </div>
         <button type="button" className="btn primary" onClick={() => setAdding(true)}>
           + 추가
@@ -69,9 +68,7 @@ export function HistoryView({ entries, onSave, onDelete }: Props) {
         </section>
       )}
 
-      {grouped.length === 0 ? (
-        <p className="empty-state">아직 저장된 기록이 없습니다. 오늘부터 남겨 보세요.</p>
-      ) : (
+      {grouped.length === 0 ? null : (
         <div className="history-list">
           {grouped.map(([date, dayEntries]) => (
             <section key={date} className="history-day">

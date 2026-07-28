@@ -47,11 +47,5 @@ export function useEntries() {
     setEntries((prev) => prev.filter((entry) => entry.id !== id))
   }
 
-  function replaceEntries(next: GlucoseEntry[]) {
-    setEntries(
-      [...next].sort((a, b) => `${b.date}T${b.time}`.localeCompare(`${a.date}T${a.time}`)),
-    )
-  }
-
-  return { entries, upsertEntry, deleteEntry, replaceEntries }
+  return { entries, upsertEntry, deleteEntry }
 }

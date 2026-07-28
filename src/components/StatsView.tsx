@@ -17,16 +17,14 @@ import {
 } from '../analysis'
 import type { GlucoseEntry } from '../types'
 import { HIGH_GLUCOSE } from '../types'
-import { BackupPanel } from './BackupPanel'
 
 type Props = {
   entries: GlucoseEntry[]
-  onImport: (entries: GlucoseEntry[]) => void
 }
 
 type RangeMode = 'week' | 'month'
 
-export function StatsView({ entries, onImport }: Props) {
+export function StatsView({ entries }: Props) {
   const [mode, setMode] = useState<RangeMode>('week')
   const [anchor, setAnchor] = useState(() => new Date())
 
@@ -68,7 +66,6 @@ export function StatsView({ entries, onImport }: Props) {
       <header className="panel-head">
         <p className="eyebrow">통계</p>
         <h2>혈당 변화</h2>
-        <p className="sub">주간·월간 추이와, 수치가 높았을 때 자주 나온 음식을 확인하세요.</p>
       </header>
 
       <div className="mode-toggle">
@@ -173,19 +170,9 @@ export function StatsView({ entries, onImport }: Props) {
         )}
       </div>
 
-      <BackupPanel entries={entries} onImport={onImport} />
-
       <section className="caution-block">
         <h3>주의할 음식</h3>
-        <p className="sub">
-          전체 평균보다 혈당이 약 12 이상 높게 나온 음식입니다. (같은 음식 2회 이상 기록 기준)
-        </p>
-        {cautions.length === 0 ? (
-          <p className="empty-state">
-            아직 충분한 데이터가 없거나, 눈에 띄게 높은 음식이 없습니다. 2달 동안 꾸준히 쌓이면 더
-            잘 보여요.
-          </p>
-        ) : (
+        {cautions.length > 0 ? (
           <ul className="caution-list">
             {cautions.map((item) => (
               <li key={item.name}>
@@ -199,7 +186,7 @@ export function StatsView({ entries, onImport }: Props) {
               </li>
             ))}
           </ul>
-        )}
+        ) : null}
       </section>
     </div>
   )

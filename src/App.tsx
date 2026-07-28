@@ -14,7 +14,7 @@ const TABS: { id: TabId; label: string }[] = [
 ]
 
 function App() {
-  const { entries, upsertEntry, deleteEntry, replaceEntries } = useEntries()
+  const { entries, upsertEntry, deleteEntry } = useEntries()
   const [tab, setTab] = useState<TabId>('today')
   const topCaution = analyzeCautionFoods(entries)[0]
 
@@ -43,9 +43,7 @@ function App() {
         {tab === 'history' ? (
           <HistoryView entries={entries} onSave={upsertEntry} onDelete={deleteEntry} />
         ) : null}
-        {tab === 'stats' ? (
-          <StatsView entries={entries} onImport={replaceEntries} />
-        ) : null}
+        {tab === 'stats' ? <StatsView entries={entries} /> : null}
       </main>
 
       <nav className="tab-bar" aria-label="주요 메뉴">
