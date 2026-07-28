@@ -33,11 +33,16 @@ export function useEntries() {
           : new Date().toISOString(),
       }
 
-      const withoutSameSlot = prev.filter(
-        (item) => !(item.date === next.date && item.slot === next.slot && item.id !== next.id),
-      )
-      const withoutSelf = withoutSameSlot.filter((item) => item.id !== next.id)
-      return [next, ...withoutSelf].sort((a, b) =>
+      // 아침/점심/저녁은 하루 1건, 수시는 같은 날 여러 건 가능
+      const withoutSelf = prev.filter((item) => item.id !== next.id)
+      const withoutConflict =
+        next.slot === 'other'
+          ? withoutSelf
+          : withoutSelf.filter(
+              (item) => !(item.date === next.date && item.slot === next.slot),
+            )
+
+      return [next, ...withoutConflict].sort((a, b) =>
         `${b.date}T${b.time}`.localeCompare(`${a.date}T${a.time}`),
       )
     })

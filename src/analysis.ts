@@ -78,17 +78,23 @@ export function analyzeCautionFoods(entries: GlucoseEntry[]): FoodCaution[] {
 export interface ChartPoint {
   label: string
   date: string
+  breakfast: number | null
   lunch: number | null
   dinner: number | null
+  other: number | null
   avg: number | null
+}
+
+function slotAverage(dayEntries: GlucoseEntry[], slot: MealSlot): number | null {
+  const values = dayEntries.filter((entry) => entry.slot === slot).map((entry) => entry.glucose)
+  if (values.length === 0) return null
+  return Math.round((values.reduce((a, b) => a + b, 0) / values.length) * 10) / 10
 }
 
 function buildSeries(entries: GlucoseEntry[], days: Date[]): ChartPoint[] {
   return days.map((day) => {
     const date = format(day, 'yyyy-MM-dd')
     const dayEntries = entries.filter((entry) => entry.date === date)
-    const lunch = dayEntries.find((entry) => entry.slot === 'lunch')?.glucose ?? null
-    const dinner = dayEntries.find((entry) => entry.slot === 'dinner')?.glucose ?? null
     const values = dayEntries.map((entry) => entry.glucose)
     const avg =
       values.length === 0
@@ -98,8 +104,10 @@ function buildSeries(entries: GlucoseEntry[], days: Date[]): ChartPoint[] {
     return {
       label: format(day, 'M/d(EEE)', { locale: ko }),
       date,
-      lunch,
-      dinner,
+      breakfast: slotAverage(dayEntries, 'breakfast'),
+      lunch: slotAverage(dayEntries, 'lunch'),
+      dinner: slotAverage(dayEntries, 'dinner'),
+      other: slotAverage(dayEntries, 'other'),
       avg,
     }
   })

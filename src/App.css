@@ -160,8 +160,42 @@
   background: rgba(15, 118, 110, 0.18);
 }
 
-.jump-today {
+.jump-today-wrap {
+  display: flex;
+  justify-content: flex-end;
   margin-top: 0.15rem;
+}
+
+.jump-today {
+  margin-top: 0;
+}
+
+.other-block {
+  margin: 0.25rem 0 1rem;
+}
+
+.other-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.55rem;
+}
+
+.other-head h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.other-cards {
+  margin-top: 0;
+}
+
+.slot-card-actions {
+  display: flex;
+  gap: 0.35rem;
+  flex-shrink: 0;
 }
 
 .sub,

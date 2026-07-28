@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import type { EntryInput } from '../hooks/useEntries'
 import type { GlucoseEntry, MealSlot } from '../types'
-import { SLOT_LABEL } from '../types'
+import { ALL_SLOTS, SLOT_LABEL } from '../types'
 
 type Props = {
   initial?: Partial<GlucoseEntry>
@@ -78,7 +78,7 @@ export function EntryForm({
 
       <fieldset className="slot-pick">
         <legend>측정 시점</legend>
-        {(['lunch', 'dinner'] as MealSlot[]).map((item) => (
+        {ALL_SLOTS.map((item) => (
           <button
             key={item}
             type="button"

@@ -26,7 +26,7 @@ function App() {
           <p className="brand">GluMemo</p>
           <h1>혈당·식사 일기</h1>
         </div>
-        <p className="header-meta">하루 2회 · 약 2개월 추적</p>
+        <p className="header-meta">아침·점심·저녁·수시</p>
       </header>
 
       {topCaution ? (
@@ -39,7 +39,9 @@ function App() {
       ) : null}
 
       <main className="app-main">
-        {tab === 'today' ? <TodayView entries={entries} onSave={upsertEntry} /> : null}
+        {tab === 'today' ? (
+          <TodayView entries={entries} onSave={upsertEntry} onDelete={deleteEntry} />
+        ) : null}
         {tab === 'history' ? (
           <HistoryView entries={entries} onSave={upsertEntry} onDelete={deleteEntry} />
         ) : null}

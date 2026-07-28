@@ -42,6 +42,7 @@ export function StatsView({ entries }: Props) {
   }, [entries, series])
 
   const avg = averageGlucose(rangeEntries)
+  const breakfastAvg = averageGlucose(rangeEntries.filter((e) => e.slot === 'breakfast'))
   const lunchAvg = averageGlucose(rangeEntries.filter((e) => e.slot === 'lunch'))
   const dinnerAvg = averageGlucose(rangeEntries.filter((e) => e.slot === 'dinner'))
   const highCount = rangeEntries.filter((e) => e.glucose >= HIGH_GLUCOSE).length
@@ -101,6 +102,10 @@ export function StatsView({ entries }: Props) {
           <strong>{avg ?? '—'}</strong>
         </div>
         <div>
+          <span>아침 평균</span>
+          <strong>{breakfastAvg ?? '—'}</strong>
+        </div>
+        <div>
           <span>점심 평균</span>
           <strong>{lunchAvg ?? '—'}</strong>
         </div>
@@ -149,6 +154,15 @@ export function StatsView({ entries }: Props) {
               <Legend />
               <Line
                 type="monotone"
+                dataKey="breakfast"
+                name="아침"
+                stroke="#0369a1"
+                strokeWidth={2.2}
+                dot={{ r: 3 }}
+                connectNulls
+              />
+              <Line
+                type="monotone"
                 dataKey="lunch"
                 name="점심"
                 stroke="#0f766e"
@@ -162,6 +176,16 @@ export function StatsView({ entries }: Props) {
                 name="저녁"
                 stroke="#c2410c"
                 strokeWidth={2.4}
+                dot={{ r: 3 }}
+                connectNulls
+              />
+              <Line
+                type="monotone"
+                dataKey="other"
+                name="수시"
+                stroke="#a16207"
+                strokeWidth={2}
+                strokeDasharray="4 4"
                 dot={{ r: 3 }}
                 connectNulls
               />
