@@ -572,12 +572,20 @@
   letter-spacing: -0.02em;
 }
 
+.caution-subhead {
+  margin-top: 1rem !important;
+}
+
 .caution-list {
   list-style: none;
   margin: 0.75rem 0 0;
   padding: 0;
   display: grid;
   gap: 0.55rem;
+}
+
+.once-list li em {
+  color: #a16207;
 }
 
 .caution-list li {

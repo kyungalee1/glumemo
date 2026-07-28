@@ -16,7 +16,7 @@ const TABS: { id: TabId; label: string }[] = [
 function App() {
   const { entries, upsertEntry, deleteEntry } = useEntries()
   const [tab, setTab] = useState<TabId>('today')
-  const topCaution = analyzeCautionFoods(entries)[0]
+  const topCaution = analyzeCautionFoods(entries).find((item) => item.level === 'caution')
 
   return (
     <div className="app-shell">
@@ -33,7 +33,7 @@ function App() {
         <aside className="alert-strip" role="status">
           <strong>주의</strong>
           <span>
-            {topCaution.name} 먹을 때 평균이 전체보다 +{topCaution.delta} 높았어요.
+            {topCaution.name}이(가) 140+ 기록에 {topCaution.count}회 함께 나왔어요.
           </span>
         </aside>
       ) : null}

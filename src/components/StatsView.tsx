@@ -198,19 +198,38 @@ export function StatsView({ entries }: Props) {
 
       <section className="caution-block">
         <h3>주의할 음식</h3>
-        {cautions.length > 0 ? (
+        {cautions.filter((item) => item.level === 'caution').length > 0 ? (
           <ul className="caution-list">
-            {cautions.map((item) => (
-              <li key={item.name}>
-                <div>
-                  <strong>{item.name}</strong>
-                  <span>
-                    {item.count}회 · 평균 {item.avgGlucose} mg/dL
-                  </span>
-                </div>
-                <em>+{item.delta}</em>
-              </li>
-            ))}
+            {cautions
+              .filter((item) => item.level === 'caution')
+              .map((item) => (
+                <li key={item.name}>
+                  <div>
+                    <strong>{item.name}</strong>
+                    <span>
+                      140+ {item.count}회 · 그때 평균 {item.avgGlucose}
+                    </span>
+                  </div>
+                  <em>주의</em>
+                </li>
+              ))}
+          </ul>
+        ) : null}
+
+        <h3 className="caution-subhead">한번 높게 나온 음식</h3>
+        {cautions.filter((item) => item.level === 'once').length > 0 ? (
+          <ul className="caution-list once-list">
+            {cautions
+              .filter((item) => item.level === 'once')
+              .map((item) => (
+                <li key={item.name}>
+                  <div>
+                    <strong>{item.name}</strong>
+                    <span>140+ 1회 · {item.avgGlucose} mg/dL</span>
+                  </div>
+                  <em>관심</em>
+                </li>
+              ))}
           </ul>
         ) : null}
       </section>

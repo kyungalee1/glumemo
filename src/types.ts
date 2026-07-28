@@ -19,6 +19,8 @@ export interface FoodCaution {
   avgGlucose: number
   overallAvg: number
   delta: number
+  /** 140+ 기록에 2회 이상이면 caution, 1회면 once */
+  level: 'caution' | 'once'
 }
 
 export const SLOT_LABEL: Record<MealSlot, string> = {

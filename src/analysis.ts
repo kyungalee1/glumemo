@@ -10,16 +10,19 @@ import {
 } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import type { FoodCaution, GlucoseEntry, MealSlot } from './types'
+import { HIGH_GLUCOSE } from './types'
 
+/** `,` `/` 로 구분. 앞뒤 공백만 제거 (횟수 비교용 키는 normalizeFood에서 공백 제거) */
 export function parseFoods(foods: string): string[] {
   return foods
-    .split(/[,，/\n]+/)
-    .map((item) => item.trim().replace(/\s+/g, ' '))
+    .split(/[,，/]+/)
+    .map((item) => item.trim())
     .filter(Boolean)
 }
 
+/** 띄어쓰기 무시하고 같은 음식으로 취급 */
 export function normalizeFood(name: string): string {
-  return name.trim().replace(/\s+/g, ' ').toLowerCase()
+  return name.replace(/\s+/g, '').toLowerCase()
 }
 
 export function getEntryForDay(
@@ -36,43 +39,61 @@ export function averageGlucose(entries: GlucoseEntry[]): number | null {
   return Math.round((sum / entries.length) * 10) / 10
 }
 
+/**
+ * 140+ 기록에 함께 나온 음식 기준.
+ * - 2회 이상: 주의(caution)
+ * - 1회: 한번 높게 나온 음식(once)
+ * 한 끼에 같은 음식이 중복 적혀도 1회로 센다.
+ */
 export function analyzeCautionFoods(entries: GlucoseEntry[]): FoodCaution[] {
   const overallAvg = averageGlucose(entries)
-  if (overallAvg === null || entries.length < 3) return []
+  const highEntries = entries.filter((entry) => entry.glucose >= HIGH_GLUCOSE)
+  if (highEntries.length === 0) return []
 
-  const buckets = new Map<string, { display: string; values: number[] }>()
+  const buckets = new Map<
+    string,
+    { display: string; highCount: number; values: number[] }
+  >()
 
-  for (const entry of entries) {
+  for (const entry of highEntries) {
+    const seenInMeal = new Set<string>()
     for (const food of parseFoods(entry.foods)) {
       const key = normalizeFood(food)
+      if (!key || seenInMeal.has(key)) continue
+      seenInMeal.add(key)
+
+      const display = food.replace(/\s+/g, '')
       const bucket = buckets.get(key)
       if (bucket) {
+        bucket.highCount += 1
         bucket.values.push(entry.glucose)
       } else {
-        buckets.set(key, { display: food, values: [entry.glucose] })
+        buckets.set(key, { display, highCount: 1, values: [entry.glucose] })
       }
     }
   }
 
   const results: FoodCaution[] = []
 
-  for (const { display, values } of buckets.values()) {
-    if (values.length < 2) continue
+  for (const { display, highCount, values } of buckets.values()) {
     const avg =
       Math.round((values.reduce((a, b) => a + b, 0) / values.length) * 10) / 10
-    const delta = Math.round((avg - overallAvg) * 10) / 10
-    if (delta >= 12) {
-      results.push({
-        name: display,
-        count: values.length,
-        avgGlucose: avg,
-        overallAvg,
-        delta,
-      })
-    }
+    const baseline = overallAvg ?? avg
+    const delta = Math.round((avg - baseline) * 10) / 10
+    results.push({
+      name: display,
+      count: highCount,
+      avgGlucose: avg,
+      overallAvg: baseline,
+      delta,
+      level: highCount >= 2 ? 'caution' : 'once',
+    })
   }
 
-  return results.sort((a, b) => b.delta - a.delta || b.count - a.count)
+  return results.sort((a, b) => {
+    if (a.level !== b.level) return a.level === 'caution' ? -1 : 1
+    return b.count - a.count || b.avgGlucose - a.avgGlucose
+  })
 }
 
 export interface ChartPoint {

@@ -56,7 +56,7 @@ export function EntryForm({
       return
     }
     if (!foods.trim()) {
-      setError('먹은 음식을 적어 주세요. (쉼표로 여러 개 가능)')
+      setError('먹은 음식을 적어 주세요. (, 또는 / 로 구분)')
       return
     }
     setError('')
@@ -108,7 +108,7 @@ export function EntryForm({
         <span>먹은 음식</span>
         <textarea
           rows={3}
-          placeholder="예: 비빔밥, 된장찌개, 바나나"
+          placeholder="예: 떡볶이,튀김/김말이"
           value={foods}
           onChange={(e) => setFoods(e.target.value)}
           required
