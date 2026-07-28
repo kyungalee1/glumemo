@@ -3,10 +3,12 @@ import {
   eachDayOfInterval,
   endOfWeek,
   format,
+  parseISO,
   startOfWeek,
 } from 'date-fns'
+import { ko } from 'date-fns/locale'
 import { useMemo, useState } from 'react'
-import { formatKoreanDate, getEntryForDay } from '../analysis'
+import { getEntryForDay } from '../analysis'
 import type { GlucoseEntry, MealSlot } from '../types'
 import {
   ALL_SLOTS,
@@ -26,11 +28,23 @@ function levelClass(value: number) {
   return 'level-ok'
 }
 
-function valuesForSlot(dayEntries: GlucoseEntry[], slot: MealSlot): number[] {
-  return dayEntries
-    .filter((entry) => entry.slot === slot)
-    .sort((a, b) => a.time.localeCompare(b.time))
-    .map((entry) => entry.glucose)
+function valuesForSlot(
+  entries: GlucoseEntry[],
+  date: string,
+  slot: MealSlot,
+): number[] {
+  if (slot === 'other') {
+    return entries
+      .filter((entry) => entry.date === date && entry.slot === 'other')
+      .sort((a, b) => a.time.localeCompare(b.time))
+      .map((entry) => entry.glucose)
+  }
+  const entry = getEntryForDay(entries, date, slot)
+  return entry ? [entry.glucose] : []
+}
+
+function formatDayLabel(date: string) {
+  return format(parseISO(date), 'M/d\nEEE', { locale: ko }).replace('\n', ' ')
 }
 
 export function HistoryView({ entries }: Props) {
@@ -77,49 +91,51 @@ export function HistoryView({ entries }: Props) {
         </div>
       </header>
 
-      <div className="history-week">
-        {weekDays.map((day) => {
-          const date = format(day, 'yyyy-MM-dd')
-          const dayEntries = entries.filter((entry) => entry.date === date)
-
-          return (
-            <section key={date} className="history-day-card">
-              <h3>{formatKoreanDate(date)}</h3>
-              <ul className="history-slot-rows">
-                {ALL_SLOTS.map((slot) => {
-                  const values =
-                    slot === 'other'
-                      ? valuesForSlot(dayEntries, slot)
-                      : (() => {
-                          const entry = getEntryForDay(entries, date, slot)
-                          return entry ? [entry.glucose] : []
-                        })()
-
-                  return (
-                    <li key={slot}>
-                      <span className="history-slot-label">
-                        <span aria-hidden="true">{SLOT_EMOJI[slot]}</span>
-                        {SLOT_LABEL[slot]}
-                      </span>
-                      <span className="history-slot-values">
+      <div className="history-table-wrap">
+        <table className="history-table">
+          <thead>
+            <tr>
+              <th scope="col">일자</th>
+              {ALL_SLOTS.map((slot) => (
+                <th key={slot} scope="col" title={SLOT_LABEL[slot]}>
+                  <span className="history-col-emoji" aria-hidden="true">
+                    {SLOT_EMOJI[slot]}
+                  </span>
+                  <span className="history-col-name">{SLOT_LABEL[slot]}</span>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {weekDays.map((day) => {
+              const date = format(day, 'yyyy-MM-dd')
+              return (
+                <tr key={date}>
+                  <th scope="row">{formatDayLabel(date)}</th>
+                  {ALL_SLOTS.map((slot) => {
+                    const values = valuesForSlot(entries, date, slot)
+                    return (
+                      <td key={slot}>
                         {values.length === 0 ? (
                           <span className="muted">—</span>
                         ) : (
-                          values.map((value, index) => (
-                            <strong key={`${slot}-${index}`} className={levelClass(value)}>
-                              {value}
-                              {index < values.length - 1 ? ', ' : ''}
-                            </strong>
-                          ))
+                          <span className="history-cell-values">
+                            {values.map((value, index) => (
+                              <strong key={`${slot}-${index}`} className={levelClass(value)}>
+                                {value}
+                                {index < values.length - 1 ? ' · ' : ''}
+                              </strong>
+                            ))}
+                          </span>
                         )}
-                      </span>
-                    </li>
-                  )
-                })}
-              </ul>
-            </section>
-          )
-        })}
+                      </td>
+                    )
+                  })}
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
       </div>
     </div>
   )

@@ -118,7 +118,6 @@
 
 .panel-head h2,
 .composer h3,
-.history-day-card h3,
 .caution-block h3 {
   margin: 0.2rem 0 0.35rem;
   font-family: var(--font);
@@ -217,10 +216,10 @@
 
 .slot-card,
 .composer,
-.history-day-card,
 .caution-list li,
 .stat-summary,
-.chart-wrap {
+.chart-wrap,
+.history-table-wrap {
   background: rgba(255, 255, 255, 0.72);
   border: 1px solid rgba(20, 40, 40, 0.08);
   backdrop-filter: blur(10px);
@@ -416,52 +415,64 @@
   color: #b91c1c;
 }
 
-.history-week {
-  display: grid;
-  gap: 0.65rem;
+.history-table-wrap {
+  padding: 0.55rem 0.35rem 0.65rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-.history-day-card {
-  padding: 0.85rem 0.95rem;
-}
-
-.history-day-card h3 {
-  font-size: 0.95rem;
-  margin: 0 0 0.55rem;
-}
-
-.history-slot-rows {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 0.35rem;
-}
-
-.history-slot-rows li {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.75rem;
-  font-size: 0.95rem;
-}
-
-.history-slot-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  color: var(--ink-soft);
-  min-width: 4.5rem;
-}
-
-.history-slot-values {
-  text-align: right;
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
   font-variant-numeric: tabular-nums;
 }
 
-.history-slot-values strong {
+.history-table th,
+.history-table td {
+  padding: 0.55rem 0.25rem;
+  text-align: center;
+  vertical-align: middle;
+  border-bottom: 1px solid rgba(20, 40, 40, 0.08);
+  font-size: 0.86rem;
+}
+
+.history-table thead th {
+  color: var(--ink-soft);
+  font-weight: 650;
+  font-size: 0.72rem;
+  line-height: 1.25;
+  border-bottom: 1px solid rgba(20, 40, 40, 0.14);
+}
+
+.history-table tbody th {
+  text-align: left;
+  padding-left: 0.45rem;
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.history-table tbody tr:last-child th,
+.history-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.history-col-emoji {
+  display: block;
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+.history-col-name {
+  display: block;
+}
+
+.history-cell-values strong {
   font-family: var(--font);
-  font-size: 1.05rem;
+  font-size: 0.92rem;
+  font-weight: 700;
 }
 
 .mode-toggle {
