@@ -1,3 +1,4 @@
+import { addDays, format, parseISO } from 'date-fns'
 import { useMemo, useState } from 'react'
 import { formatKoreanDate, getEntryForDay } from '../analysis'
 import type { EntryInput } from '../hooks/useEntries'
@@ -11,8 +12,11 @@ type Props = {
 }
 
 function todayString() {
-  const d = new Date()
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+  return format(new Date(), 'yyyy-MM-dd')
+}
+
+function shiftDate(date: string, delta: number) {
+  return format(addDays(parseISO(date), delta), 'yyyy-MM-dd')
 }
 
 function levelClass(value: number) {
@@ -23,16 +27,24 @@ function levelClass(value: number) {
 
 export function TodayView({ entries, onSave }: Props) {
   const today = todayString()
-  const lunch = getEntryForDay(entries, today, 'lunch')
-  const dinner = getEntryForDay(entries, today, 'dinner')
+  const [selectedDate, setSelectedDate] = useState(today)
   const [editing, setEditing] = useState<MealSlot | null>(null)
+
+  const lunch = getEntryForDay(entries, selectedDate, 'lunch')
+  const dinner = getEntryForDay(entries, selectedDate, 'dinner')
+  const isToday = selectedDate === today
 
   const draft = useMemo(() => {
     if (!editing) return undefined
-    return getEntryForDay(entries, today, editing)
-  }, [entries, editing, today])
+    return getEntryForDay(entries, selectedDate, editing)
+  }, [entries, editing, selectedDate])
 
   const bothDone = Boolean(lunch && dinner)
+
+  function moveDay(delta: number) {
+    setEditing(null)
+    setSelectedDate((prev) => shiftDate(prev, delta))
+  }
 
   function handleSave(input: EntryInput) {
     onSave(input, draft?.id)
@@ -42,9 +54,34 @@ export function TodayView({ entries, onSave }: Props) {
   return (
     <div className="panel today-panel">
       <header className="panel-head">
-        <p className="eyebrow">오늘의 기록</p>
-        <h2>{formatKoreanDate(today)}</h2>
-        <p className="sub">점심·저녁 카드의 입력을 눌러 혈당과 식사를 남겨 보세요.</p>
+        <p className="eyebrow">{isToday ? '오늘의 기록' : '날짜별 기록'}</p>
+        <div className="date-nav">
+          <button
+            type="button"
+            className="date-nav-btn"
+            aria-label="이전 날짜"
+            onClick={() => moveDay(-1)}
+          >
+            ‹
+          </button>
+          <h2>{formatKoreanDate(selectedDate)}</h2>
+          <button
+            type="button"
+            className="date-nav-btn"
+            aria-label="다음 날짜"
+            onClick={() => moveDay(1)}
+          >
+            ›
+          </button>
+        </div>
+        {!isToday ? (
+          <button type="button" className="btn tiny jump-today" onClick={() => {
+            setEditing(null)
+            setSelectedDate(today)
+          }}>
+            오늘로 이동
+          </button>
+        ) : null}
       </header>
 
       <div className="slot-cards">
@@ -87,17 +124,17 @@ export function TodayView({ entries, onSave }: Props) {
             {SLOT_LABEL[editing]} {draft ? '수정' : '새 기록'}
           </h3>
           <EntryForm
-            key={`${editing}-${draft?.id ?? 'new'}`}
+            key={`${selectedDate}-${editing}-${draft?.id ?? 'new'}`}
             initial={draft}
             defaultSlot={editing}
-            defaultDate={today}
-            submitLabel={draft ? '수정 저장' : '오늘 기록 저장'}
+            defaultDate={selectedDate}
+            submitLabel={draft ? '수정 저장' : '기록 저장'}
             onSubmit={handleSave}
             onCancel={() => setEditing(null)}
           />
         </section>
       ) : bothDone ? (
-        <p className="all-done">오늘 점심·저녁 기록을 모두 남겼어요.</p>
+        <p className="all-done">이 날 점심·저녁 기록을 모두 남겼어요.</p>
       ) : null}
     </div>
   )
