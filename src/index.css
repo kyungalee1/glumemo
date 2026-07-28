@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,550;9..144,700&display=swap');
+
+:root {
+  --font-sans: 'IBM Plex Sans KR', sans-serif;
+  --font-display: 'Fraunces', 'IBM Plex Sans KR', serif;
+  --ink: #142826;
+  --ink-soft: #5a6a68;
+  --teal: #0f766e;
+  --teal-deep: #115e59;
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--ink);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  min-width: 320px;
+  background: #e8efec;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button:active {
+  transform: translateY(1px);
+}
