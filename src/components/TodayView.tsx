@@ -148,9 +148,13 @@ export function TodayView({ entries, onSave, onDelete }: Props) {
           <button
             type="button"
             className="btn tiny"
-            onClick={() => setEditing({ slot: 'other' })}
+            onClick={() =>
+              setEditing(
+                editing?.slot === 'other' && !editing.id ? null : { slot: 'other' },
+              )
+            }
           >
-            + 추가
+            {editing?.slot === 'other' && !editing.id ? '닫기' : '+ 추가'}
           </button>
         </div>
         {others.length === 0 ? (
