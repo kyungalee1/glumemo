@@ -436,31 +436,16 @@
   min-height: 280px;
 }
 
-.backup-panel,
 .caution-block {
   margin-bottom: 1rem;
 }
 
-.backup-panel h3,
 .caution-block h3 {
   font-size: 1.1rem;
   margin: 0 0 0.35rem;
   font-family: var(--font);
   font-weight: 650;
   letter-spacing: -0.02em;
-}
-
-.backup-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
-}
-
-.backup-msg {
-  margin: 0.65rem 0 0;
-  font-size: 0.86rem;
-  color: var(--teal-deep);
 }
 
 .caution-list {
