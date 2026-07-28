@@ -19,9 +19,12 @@ npm run dev
 
 ### Vercel (권장 · 짧은 URL)
 
-1. [Vercel Import](https://vercel.com/new/import?s=https://github.com/kyungalee1/glumemo) 에서 저장소 연결
+이 PC 환경에서는 CLI SSL 이슈로 자동 배포가 막힐 수 있습니다. 브라우저에서 한 번만 연결하면 됩니다.
+
+1. [Vercel에서 이 저장소 Import](https://vercel.com/new/import?s=https://github.com/kyungalee1/glumemo)
 2. Framework: **Vite** (자동), Build `npm run build`, Output `dist`
 3. Deploy 후 나온 `*.vercel.app` URL을 휴대폰에서 사용
+4. 이후 `main`에 push하면 Vercel이 자동 재배포합니다
 
 PC를 켜둘 필요 없이, 배포된 URL로 언제든 사용할 수 있습니다.
 
