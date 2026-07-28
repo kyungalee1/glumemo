@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react'
 import {
   CartesianGrid,
-  Legend,
   Line,
   LineChart,
   ResponsiveContainer,
@@ -161,93 +160,108 @@ export function StatsView({ entries }: Props) {
         {rangeEntries.length === 0 ? (
           <p className="empty-state">이 기간에 기록이 없습니다.</p>
         ) : (
-          <ResponsiveContainer width="100%" height={280}>
-            <LineChart data={series} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
-              <CartesianGrid stroke="rgba(20,40,40,0.08)" vertical={false} />
-              <XAxis
-                dataKey="label"
-                tick={{ fontSize: 11, fill: '#5a6a68' }}
-                interval={mode === 'month' ? 3 : 0}
-                tickLine={false}
-                axisLine={false}
-              />
-              <YAxis
-                domain={[60, 'auto']}
-                tick={{ fontSize: 11, fill: '#5a6a68' }}
-                tickLine={false}
-                axisLine={false}
-                width={36}
-              />
-              <Tooltip
-                contentStyle={{
-                  borderRadius: 12,
-                  border: '1px solid rgba(20,40,40,0.1)',
-                  background: '#f7faf8',
-                }}
-                formatter={(value) => {
-                  if (value == null) return ['—', '']
-                  return [`${value} mg/dL`, '']
-                }}
-              />
-              <Legend />
-              <Line
-                type="linear"
-                dataKey="breakfast"
-                name="🌅 아침 ●"
-                stroke="transparent"
-                strokeWidth={0}
-                connectNulls={false}
-                isAnimationActive={false}
-                legendType="circle"
-                activeDot={{ r: 7, fill: '#0284c7' }}
-                dot={(props) => (
-                  <SlotDot {...props} dataKey="breakfast" fill="#0284c7" shape="circle" />
-                )}
-              />
-              <Line
-                type="linear"
-                dataKey="lunch"
-                name="☀️ 점심 ■"
-                stroke="transparent"
-                strokeWidth={0}
-                connectNulls={false}
-                isAnimationActive={false}
-                legendType="square"
-                activeDot={{ r: 7, fill: '#059669' }}
-                dot={(props) => (
-                  <SlotDot {...props} dataKey="lunch" fill="#059669" shape="square" />
-                )}
-              />
-              <Line
-                type="linear"
-                dataKey="dinner"
-                name="🌙 저녁 ▲"
-                stroke="transparent"
-                strokeWidth={0}
-                connectNulls={false}
-                isAnimationActive={false}
-                legendType="triangle"
-                activeDot={{ r: 7, fill: '#ea580c' }}
-                dot={(props) => (
-                  <SlotDot {...props} dataKey="dinner" fill="#ea580c" shape="triangle" />
-                )}
-              />
-              <Line
-                type="linear"
-                dataKey="other"
-                name="⏱️ 수시 ◆"
-                stroke="transparent"
-                strokeWidth={0}
-                connectNulls={false}
-                isAnimationActive={false}
-                legendType="diamond"
-                activeDot={{ r: 7, fill: '#a16207' }}
-                dot={(props) => (
-                  <SlotDot {...props} dataKey="other" fill="#a16207" shape="diamond" />
-                )}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <>
+            <ResponsiveContainer width="100%" height={260}>
+              <LineChart data={series} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
+                <CartesianGrid stroke="rgba(20,40,40,0.08)" vertical={false} />
+                <XAxis
+                  dataKey="label"
+                  tick={{ fontSize: 11, fill: '#5a6a68' }}
+                  interval={mode === 'month' ? 3 : 0}
+                  tickLine={false}
+                  axisLine={false}
+                />
+                <YAxis
+                  domain={[60, 'auto']}
+                  tick={{ fontSize: 11, fill: '#5a6a68' }}
+                  tickLine={false}
+                  axisLine={false}
+                  width={36}
+                />
+                <Tooltip
+                  contentStyle={{
+                    borderRadius: 12,
+                    border: '1px solid rgba(20,40,40,0.1)',
+                    background: '#f7faf8',
+                  }}
+                  formatter={(value) => {
+                    if (value == null) return ['—', '']
+                    return [`${value} mg/dL`, '']
+                  }}
+                />
+                <Line
+                  type="linear"
+                  dataKey="breakfast"
+                  name="아침"
+                  stroke="transparent"
+                  strokeWidth={0}
+                  connectNulls={false}
+                  isAnimationActive={false}
+                  activeDot={{ r: 7, fill: '#0284c7' }}
+                  dot={(props) => (
+                    <SlotDot {...props} dataKey="breakfast" fill="#0284c7" shape="circle" />
+                  )}
+                />
+                <Line
+                  type="linear"
+                  dataKey="lunch"
+                  name="점심"
+                  stroke="transparent"
+                  strokeWidth={0}
+                  connectNulls={false}
+                  isAnimationActive={false}
+                  activeDot={{ r: 7, fill: '#059669' }}
+                  dot={(props) => (
+                    <SlotDot {...props} dataKey="lunch" fill="#059669" shape="square" />
+                  )}
+                />
+                <Line
+                  type="linear"
+                  dataKey="dinner"
+                  name="저녁"
+                  stroke="transparent"
+                  strokeWidth={0}
+                  connectNulls={false}
+                  isAnimationActive={false}
+                  activeDot={{ r: 7, fill: '#ea580c' }}
+                  dot={(props) => (
+                    <SlotDot {...props} dataKey="dinner" fill="#ea580c" shape="triangle" />
+                  )}
+                />
+                <Line
+                  type="linear"
+                  dataKey="other"
+                  name="수시"
+                  stroke="transparent"
+                  strokeWidth={0}
+                  connectNulls={false}
+                  isAnimationActive={false}
+                  activeDot={{ r: 7, fill: '#a16207' }}
+                  dot={(props) => (
+                    <SlotDot {...props} dataKey="other" fill="#a16207" shape="diamond" />
+                  )}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+            <ul className="chart-legend" aria-label="그래프 범례">
+              <li>
+                <span className="legend-mark circle" aria-hidden="true" />
+                아침
+              </li>
+              <li>
+                <span className="legend-mark square" aria-hidden="true" />
+                점심
+              </li>
+              <li>
+                <span className="legend-mark triangle" aria-hidden="true" />
+                저녁
+              </li>
+              <li>
+                <span className="legend-mark diamond" aria-hidden="true" />
+                수시
+              </li>
+            </ul>
+          </>
         )}
       </div>
 
