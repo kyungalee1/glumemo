@@ -128,13 +128,29 @@ export function TodayView({ entries, onSave, onDelete }: Props) {
             <article key={slot} className={isOpen ? 'slot-card active' : 'slot-card'}>
               <div className="slot-card-top">
                 <h3>{slotTitle(slot)}</h3>
-                <button
-                  type="button"
-                  className="btn tiny"
-                  onClick={() => setEditing(isOpen ? null : { slot })}
-                >
-                  {isOpen ? '닫기' : entry ? '수정' : '입력'}
-                </button>
+                <div className="slot-card-actions">
+                  <button
+                    type="button"
+                    className="btn tiny"
+                    onClick={() => setEditing(isOpen ? null : { slot })}
+                  >
+                    {isOpen ? '닫기' : entry ? '수정' : '입력'}
+                  </button>
+                  {entry ? (
+                    <button
+                      type="button"
+                      className="btn tiny danger"
+                      onClick={() => {
+                        if (confirm(`${slotTitle(slot)} 기록을 삭제할까요?`)) {
+                          if (editing?.slot === slot) setEditing(null)
+                          onDelete(entry.id)
+                        }
+                      }}
+                    >
+                      삭제
+                    </button>
+                  ) : null}
+                </div>
               </div>
               {entry ? renderEntryBody(entry) : <p className="empty-slot">아직 기록이 없어요.</p>}
             </article>

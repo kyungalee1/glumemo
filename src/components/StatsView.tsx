@@ -24,6 +24,40 @@ type Props = {
 
 type RangeMode = 'week' | 'month'
 
+type DotProps = {
+  cx?: number
+  cy?: number
+  payload?: Record<string, number | string | null>
+}
+
+function SlotDot({
+  cx,
+  cy,
+  payload,
+  dataKey,
+  fill,
+  shape,
+}: DotProps & {
+  dataKey: string
+  fill: string
+  shape: 'circle' | 'square' | 'triangle' | 'diamond'
+}) {
+  if (cx == null || cy == null || payload?.[dataKey] == null) return null
+
+  if (shape === 'square') {
+    return <rect x={cx - 4.5} y={cy - 4.5} width={9} height={9} fill={fill} rx={1} />
+  }
+  if (shape === 'triangle') {
+    return <path d={`M ${cx} ${cy - 6} L ${cx + 6} ${cy + 5} L ${cx - 6} ${cy + 5} Z`} fill={fill} />
+  }
+  if (shape === 'diamond') {
+    return (
+      <path d={`M ${cx} ${cy - 6} L ${cx + 5} ${cy} L ${cx} ${cy + 6} L ${cx - 5} ${cy} Z`} fill={fill} />
+    )
+  }
+  return <circle cx={cx} cy={cy} r={5} fill={fill} />
+}
+
 export function StatsView({ entries }: Props) {
   const [mode, setMode] = useState<RangeMode>('week')
   const [anchor, setAnchor] = useState(() => new Date())
@@ -97,9 +131,15 @@ export function StatsView({ entries }: Props) {
       </div>
 
       <div className="stat-summary">
-        <div className="stat-overall">
-          <span>전체 평균</span>
-          <strong>{avg ?? '—'}</strong>
+        <div className="stat-top-row">
+          <div className="stat-overall">
+            <span>전체 평균</span>
+            <strong>{avg ?? '—'}</strong>
+          </div>
+          <div className="stat-high compact">
+            <span>{HIGH_GLUCOSE}+ 횟수</span>
+            <strong>{highCount}</strong>
+          </div>
         </div>
         <div className="stat-meals">
           <div>
@@ -115,17 +155,13 @@ export function StatsView({ entries }: Props) {
             <strong>{dinnerAvg ?? '—'}</strong>
           </div>
         </div>
-        <div className="stat-high">
-          <span>{HIGH_GLUCOSE}+ 횟수</span>
-          <strong>{highCount}</strong>
-        </div>
       </div>
 
       <div className="chart-wrap">
         {rangeEntries.length === 0 ? (
           <p className="empty-state">이 기간에 기록이 없습니다.</p>
         ) : (
-          <ResponsiveContainer width="100%" height={260}>
+          <ResponsiveContainer width="100%" height={280}>
             <LineChart data={series} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
               <CartesianGrid stroke="rgba(20,40,40,0.08)" vertical={false} />
               <XAxis
@@ -155,41 +191,60 @@ export function StatsView({ entries }: Props) {
               />
               <Legend />
               <Line
-                type="monotone"
+                type="linear"
                 dataKey="breakfast"
-                name="🌅 아침"
-                stroke="#0369a1"
-                strokeWidth={2.2}
-                dot={{ r: 3 }}
-                connectNulls
+                name="🌅 아침 ●"
+                stroke="transparent"
+                strokeWidth={0}
+                connectNulls={false}
+                isAnimationActive={false}
+                legendType="circle"
+                activeDot={{ r: 7, fill: '#0284c7' }}
+                dot={(props) => (
+                  <SlotDot {...props} dataKey="breakfast" fill="#0284c7" shape="circle" />
+                )}
               />
               <Line
-                type="monotone"
+                type="linear"
                 dataKey="lunch"
-                name="☀️ 점심"
-                stroke="#0f766e"
-                strokeWidth={2.4}
-                dot={{ r: 3 }}
-                connectNulls
+                name="☀️ 점심 ■"
+                stroke="transparent"
+                strokeWidth={0}
+                connectNulls={false}
+                isAnimationActive={false}
+                legendType="square"
+                activeDot={{ r: 7, fill: '#059669' }}
+                dot={(props) => (
+                  <SlotDot {...props} dataKey="lunch" fill="#059669" shape="square" />
+                )}
               />
               <Line
-                type="monotone"
+                type="linear"
                 dataKey="dinner"
-                name="🌙 저녁"
-                stroke="#c2410c"
-                strokeWidth={2.4}
-                dot={{ r: 3 }}
-                connectNulls
+                name="🌙 저녁 ▲"
+                stroke="transparent"
+                strokeWidth={0}
+                connectNulls={false}
+                isAnimationActive={false}
+                legendType="triangle"
+                activeDot={{ r: 7, fill: '#ea580c' }}
+                dot={(props) => (
+                  <SlotDot {...props} dataKey="dinner" fill="#ea580c" shape="triangle" />
+                )}
               />
               <Line
-                type="monotone"
+                type="linear"
                 dataKey="other"
-                name="⏱️ 수시"
-                stroke="#a16207"
-                strokeWidth={2}
-                strokeDasharray="4 4"
-                dot={{ r: 3 }}
-                connectNulls
+                name="⏱️ 수시 ◆"
+                stroke="transparent"
+                strokeWidth={0}
+                connectNulls={false}
+                isAnimationActive={false}
+                legendType="diamond"
+                activeDot={{ r: 7, fill: '#a16207' }}
+                dot={(props) => (
+                  <SlotDot {...props} dataKey="other" fill="#a16207" shape="diamond" />
+                )}
               />
             </LineChart>
           </ResponsiveContainer>
