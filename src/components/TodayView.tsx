@@ -27,15 +27,12 @@ export function TodayView({ entries, onSave }: Props) {
   const dinner = getEntryForDay(entries, today, 'dinner')
   const [editing, setEditing] = useState<MealSlot | null>(null)
 
-  const hour = new Date().getHours()
-  const suggested: MealSlot = hour >= 16 ? 'dinner' : 'lunch'
-
-  const openSlot = editing ?? (lunch && dinner ? null : suggested)
-
   const draft = useMemo(() => {
-    if (!openSlot) return undefined
-    return getEntryForDay(entries, today, openSlot)
-  }, [entries, openSlot, today])
+    if (!editing) return undefined
+    return getEntryForDay(entries, today, editing)
+  }, [entries, editing, today])
+
+  const bothDone = Boolean(lunch && dinner)
 
   function handleSave(input: EntryInput) {
     onSave(input, draft?.id)
@@ -47,22 +44,23 @@ export function TodayView({ entries, onSave }: Props) {
       <header className="panel-head">
         <p className="eyebrow">오늘의 기록</p>
         <h2>{formatKoreanDate(today)}</h2>
-        <p className="sub">점심·저녁 하루 두 번 혈당과 식사를 남겨 보세요.</p>
+        <p className="sub">점심·저녁 카드의 입력을 눌러 혈당과 식사를 남겨 보세요.</p>
       </header>
 
       <div className="slot-cards">
         {(['lunch', 'dinner'] as MealSlot[]).map((slot) => {
           const entry = slot === 'lunch' ? lunch : dinner
+          const isOpen = editing === slot
           return (
-            <article key={slot} className="slot-card">
+            <article key={slot} className={isOpen ? 'slot-card active' : 'slot-card'}>
               <div className="slot-card-top">
                 <h3>{SLOT_LABEL[slot]}</h3>
                 <button
                   type="button"
                   className="btn tiny"
-                  onClick={() => setEditing(slot)}
+                  onClick={() => setEditing(isOpen ? null : slot)}
                 >
-                  {entry ? '수정' : '입력'}
+                  {isOpen ? '닫기' : entry ? '수정' : '입력'}
                 </button>
               </div>
               {entry ? (
@@ -83,24 +81,24 @@ export function TodayView({ entries, onSave }: Props) {
         })}
       </div>
 
-      {openSlot ? (
+      {editing ? (
         <section className="composer">
           <h3>
-            {SLOT_LABEL[openSlot]} {draft ? '수정' : '새 기록'}
+            {SLOT_LABEL[editing]} {draft ? '수정' : '새 기록'}
           </h3>
           <EntryForm
-            key={`${openSlot}-${draft?.id ?? 'new'}`}
+            key={`${editing}-${draft?.id ?? 'new'}`}
             initial={draft}
-            defaultSlot={openSlot}
+            defaultSlot={editing}
             defaultDate={today}
             submitLabel={draft ? '수정 저장' : '오늘 기록 저장'}
             onSubmit={handleSave}
-            onCancel={editing ? () => setEditing(null) : undefined}
+            onCancel={() => setEditing(null)}
           />
         </section>
-      ) : (
+      ) : bothDone ? (
         <p className="all-done">오늘 점심·저녁 기록을 모두 남겼어요.</p>
-      )}
+      ) : null}
     </div>
   )
 }

@@ -147,6 +147,11 @@
   padding: 1rem;
 }
 
+.slot-card.active {
+  border-color: rgba(15, 118, 110, 0.35);
+  box-shadow: 0 0 0 1px rgba(15, 118, 110, 0.18);
+}
+
 .slot-card-top {
   display: flex;
   justify-content: space-between;
