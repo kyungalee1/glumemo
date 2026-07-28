@@ -40,7 +40,7 @@
 
 .brand {
   margin: 0;
-  font-family: var(--font-display);
+  font-family: var(--font);
   font-size: 1.55rem;
   font-weight: 700;
   letter-spacing: -0.03em;
@@ -109,7 +109,7 @@
 .history-day h3,
 .caution-block h3 {
   margin: 0.2rem 0 0.35rem;
-  font-family: var(--font-display);
+  font-family: var(--font);
   font-weight: 650;
   letter-spacing: -0.02em;
 }
@@ -161,7 +161,7 @@
 
 .glucose-big {
   margin: 0.15rem 0;
-  font-family: var(--font-display);
+  font-family: var(--font);
   font-size: 2.4rem;
   line-height: 1;
   letter-spacing: -0.04em;
@@ -356,7 +356,7 @@
 }
 
 .history-main strong {
-  font-family: var(--font-display);
+  font-family: var(--font);
   font-size: 1.35rem;
 }
 
@@ -408,7 +408,7 @@
 }
 
 .stat-grid strong {
-  font-family: var(--font-display);
+  font-family: var(--font);
   font-size: 1.35rem;
   color: var(--teal-deep);
 }
@@ -428,7 +428,7 @@
 .caution-block h3 {
   font-size: 1.1rem;
   margin: 0 0 0.35rem;
-  font-family: var(--font-display);
+  font-family: var(--font);
   font-weight: 650;
   letter-spacing: -0.02em;
 }
@@ -474,7 +474,7 @@
 
 .caution-list em {
   font-style: normal;
-  font-family: var(--font-display);
+  font-family: var(--font);
   font-weight: 700;
   color: #c2410c;
   font-size: 1.1rem;
