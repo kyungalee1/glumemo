@@ -95,6 +95,18 @@
   gap: 0.75rem;
 }
 
+.panel-head.row > div:first-child {
+  min-width: 0;
+  flex: 1;
+}
+
+.panel-head.row > .btn {
+  flex: 0 0 auto;
+  white-space: nowrap;
+  writing-mode: horizontal-tb;
+  align-self: flex-start;
+}
+
 .eyebrow {
   margin: 0;
   font-size: 0.72rem;
