@@ -6,7 +6,7 @@ import type { GlucoseEntry, MealSlot } from '../types'
 import {
   HIGH_GLUCOSE,
   REGULAR_SLOTS,
-  SLOT_LABEL,
+  slotTitle,
   VERY_HIGH_GLUCOSE,
 } from '../types'
 import { EntryForm } from './EntryForm'
@@ -127,7 +127,7 @@ export function TodayView({ entries, onSave, onDelete }: Props) {
           return (
             <article key={slot} className={isOpen ? 'slot-card active' : 'slot-card'}>
               <div className="slot-card-top">
-                <h3>{SLOT_LABEL[slot]}</h3>
+                <h3>{slotTitle(slot)}</h3>
                 <button
                   type="button"
                   className="btn tiny"
@@ -144,7 +144,7 @@ export function TodayView({ entries, onSave, onDelete }: Props) {
 
       <section className="other-block">
         <div className="other-head">
-          <h3>수시 측정</h3>
+          <h3>⏱️ 수시 측정</h3>
           <button
             type="button"
             className="btn tiny"
@@ -202,7 +202,7 @@ export function TodayView({ entries, onSave, onDelete }: Props) {
       {editing ? (
         <section className="composer">
           <h3>
-            {SLOT_LABEL[editing.slot]} {draft ? '수정' : '새 기록'}
+            {slotTitle(editing.slot)} {draft ? '수정' : '새 기록'}
           </h3>
           <EntryForm
             key={`${selectedDate}-${editing.slot}-${editing.id ?? draft?.id ?? 'new'}`}

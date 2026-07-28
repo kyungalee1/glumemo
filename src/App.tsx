@@ -42,9 +42,7 @@ function App() {
         {tab === 'today' ? (
           <TodayView entries={entries} onSave={upsertEntry} onDelete={deleteEntry} />
         ) : null}
-        {tab === 'history' ? (
-          <HistoryView entries={entries} onSave={upsertEntry} onDelete={deleteEntry} />
-        ) : null}
+        {tab === 'history' ? <HistoryView entries={entries} /> : null}
         {tab === 'stats' ? <StatsView entries={entries} /> : null}
       </main>
 

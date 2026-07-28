@@ -1,7 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import type { EntryInput } from '../hooks/useEntries'
 import type { GlucoseEntry, MealSlot } from '../types'
-import { ALL_SLOTS, SLOT_LABEL } from '../types'
+import { ALL_SLOTS, slotTitle } from '../types'
 
 type Props = {
   initial?: Partial<GlucoseEntry>
@@ -85,7 +85,7 @@ export function EntryForm({
             className={slot === item ? 'slot active' : 'slot'}
             onClick={() => setSlot(item)}
           >
-            {SLOT_LABEL[item]}
+            {slotTitle(item)}
           </button>
         ))}
       </fieldset>

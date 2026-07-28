@@ -103,15 +103,15 @@ export function StatsView({ entries }: Props) {
         </div>
         <div className="stat-meals">
           <div>
-            <span>아침</span>
+            <span>🌅 아침</span>
             <strong>{breakfastAvg ?? '—'}</strong>
           </div>
           <div>
-            <span>점심</span>
+            <span>☀️ 점심</span>
             <strong>{lunchAvg ?? '—'}</strong>
           </div>
           <div>
-            <span>저녁</span>
+            <span>🌙 저녁</span>
             <strong>{dinnerAvg ?? '—'}</strong>
           </div>
         </div>
@@ -157,7 +157,7 @@ export function StatsView({ entries }: Props) {
               <Line
                 type="monotone"
                 dataKey="breakfast"
-                name="아침"
+                name="🌅 아침"
                 stroke="#0369a1"
                 strokeWidth={2.2}
                 dot={{ r: 3 }}
@@ -166,7 +166,7 @@ export function StatsView({ entries }: Props) {
               <Line
                 type="monotone"
                 dataKey="lunch"
-                name="점심"
+                name="☀️ 점심"
                 stroke="#0f766e"
                 strokeWidth={2.4}
                 dot={{ r: 3 }}
@@ -175,7 +175,7 @@ export function StatsView({ entries }: Props) {
               <Line
                 type="monotone"
                 dataKey="dinner"
-                name="저녁"
+                name="🌙 저녁"
                 stroke="#c2410c"
                 strokeWidth={2.4}
                 dot={{ r: 3 }}
@@ -184,7 +184,7 @@ export function StatsView({ entries }: Props) {
               <Line
                 type="monotone"
                 dataKey="other"
-                name="수시"
+                name="⏱️ 수시"
                 stroke="#a16207"
                 strokeWidth={2}
                 strokeDasharray="4 4"

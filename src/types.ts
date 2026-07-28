@@ -28,6 +28,17 @@ export const SLOT_LABEL: Record<MealSlot, string> = {
   other: '수시',
 }
 
+export const SLOT_EMOJI: Record<MealSlot, string> = {
+  breakfast: '🌅',
+  lunch: '☀️',
+  dinner: '🌙',
+  other: '⏱️',
+}
+
+export function slotTitle(slot: MealSlot): string {
+  return `${SLOT_EMOJI[slot]} ${SLOT_LABEL[slot]}`
+}
+
 /** 하루 1회씩 기록하는 기본 시점 */
 export const REGULAR_SLOTS: MealSlot[] = ['breakfast', 'lunch', 'dinner']
 
