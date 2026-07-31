@@ -9,16 +9,17 @@ import {
   YAxis,
 } from 'recharts'
 import {
-  analyzeCautionFoods,
   averageGlucose,
   monthlySeries,
   weeklySeries,
 } from '../analysis'
-import type { GlucoseEntry } from '../types'
+import type { FoodCaution, GlucoseEntry } from '../types'
 import { HIGH_GLUCOSE } from '../types'
 
 type Props = {
   entries: GlucoseEntry[]
+  cautions: FoodCaution[]
+  onDismissFood: (name: string) => void
 }
 
 type RangeMode = 'week' | 'month'
@@ -57,7 +58,7 @@ function SlotDot({
   return <circle cx={cx} cy={cy} r={5} fill={fill} />
 }
 
-export function StatsView({ entries }: Props) {
+export function StatsView({ entries, cautions, onDismissFood }: Props) {
   const [mode, setMode] = useState<RangeMode>('week')
   const [anchor, setAnchor] = useState(() => new Date())
 
@@ -79,7 +80,8 @@ export function StatsView({ entries }: Props) {
   const lunchAvg = averageGlucose(rangeEntries.filter((e) => e.slot === 'lunch'))
   const dinnerAvg = averageGlucose(rangeEntries.filter((e) => e.slot === 'dinner'))
   const highCount = rangeEntries.filter((e) => e.glucose >= HIGH_GLUCOSE).length
-  const cautions = useMemo(() => analyzeCautionFoods(entries), [entries])
+  const cautionItems = cautions.filter((item) => item.level === 'caution')
+  const onceItems = cautions.filter((item) => item.level === 'once')
 
   function shift(delta: number) {
     setAnchor((prev) => {
@@ -267,38 +269,60 @@ export function StatsView({ entries }: Props) {
 
       <section className="caution-block">
         <h3>주의할 음식</h3>
-        {cautions.filter((item) => item.level === 'caution').length > 0 ? (
+        {cautionItems.length > 0 ? (
           <ul className="caution-list">
-            {cautions
-              .filter((item) => item.level === 'caution')
-              .map((item) => (
-                <li key={item.name}>
-                  <div>
-                    <strong>{item.name}</strong>
-                    <span>
-                      140+ {item.count}회 · 그때 평균 {item.avgGlucose}
-                    </span>
-                  </div>
+            {cautionItems.map((item) => (
+              <li key={item.name}>
+                <div>
+                  <strong>{item.name}</strong>
+                  <span>
+                    140+ {item.count}회 · 그때 평균 {item.avgGlucose}
+                  </span>
+                </div>
+                <div className="caution-actions">
                   <em>주의</em>
-                </li>
-              ))}
+                  <button
+                    type="button"
+                    className="btn tiny danger"
+                    onClick={() => {
+                      if (confirm(`목록에서 "${item.name}"을(를) 숨길까요?\n혈당 기록은 그대로 둡니다.`)) {
+                        onDismissFood(item.name)
+                      }
+                    }}
+                  >
+                    삭제
+                  </button>
+                </div>
+              </li>
+            ))}
           </ul>
         ) : null}
 
         <h3 className="caution-subhead">한번 높게 나온 음식</h3>
-        {cautions.filter((item) => item.level === 'once').length > 0 ? (
+        {onceItems.length > 0 ? (
           <ul className="caution-list once-list">
-            {cautions
-              .filter((item) => item.level === 'once')
-              .map((item) => (
-                <li key={item.name}>
-                  <div>
-                    <strong>{item.name}</strong>
-                    <span>140+ 1회 · {item.avgGlucose} mg/dL</span>
-                  </div>
+            {onceItems.map((item) => (
+              <li key={item.name}>
+                <div>
+                  <strong>{item.name}</strong>
+                  <span>140+ 1회 · {item.avgGlucose} mg/dL</span>
+                </div>
+                <div className="caution-actions">
                   <em>관심</em>
-                </li>
-              ))}
+                  <button
+                    type="button"
+                    className="btn tiny danger"
+                    onClick={() => {
+                      if (confirm(`목록에서 "${item.name}"을(를) 숨길까요?\n혈당 기록은 그대로 둡니다.`)) {
+                        onDismissFood(item.name)
+                      }
+                    }}
+                  >
+                    삭제
+                  </button>
+                </div>
+              </li>
+            ))}
           </ul>
         ) : null}
       </section>

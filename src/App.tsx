@@ -1,9 +1,10 @@
-import { useState } from 'react'
-import { analyzeCautionFoods } from './analysis'
+import { useMemo, useState } from 'react'
+import { analyzeCautionFoods, normalizeFood } from './analysis'
 import { HistoryView } from './components/HistoryView'
 import { StatsView } from './components/StatsView'
 import { TodayView } from './components/TodayView'
 import { useEntries } from './hooks/useEntries'
+import { loadDismissedFoods, saveDismissedFoods } from './storage'
 import type { TabId } from './types'
 import './App.css'
 
@@ -16,7 +17,26 @@ const TABS: { id: TabId; label: string }[] = [
 function App() {
   const { entries, upsertEntry, deleteEntry } = useEntries()
   const [tab, setTab] = useState<TabId>('today')
-  const topCaution = analyzeCautionFoods(entries).find((item) => item.level === 'caution')
+  const [dismissedFoods, setDismissedFoods] = useState(() => loadDismissedFoods())
+
+  const visibleCautions = useMemo(() => {
+    const dismissed = new Set(dismissedFoods)
+    return analyzeCautionFoods(entries).filter(
+      (item) => !dismissed.has(normalizeFood(item.name)),
+    )
+  }, [entries, dismissedFoods])
+
+  const topCaution = visibleCautions.find((item) => item.level === 'caution')
+
+  function dismissFood(name: string) {
+    const key = normalizeFood(name)
+    setDismissedFoods((prev) => {
+      if (prev.includes(key)) return prev
+      const next = [...prev, key]
+      saveDismissedFoods(next)
+      return next
+    })
+  }
 
   return (
     <div className="app-shell">
@@ -43,7 +63,13 @@ function App() {
           <TodayView entries={entries} onSave={upsertEntry} onDelete={deleteEntry} />
         ) : null}
         {tab === 'history' ? <HistoryView entries={entries} /> : null}
-        {tab === 'stats' ? <StatsView entries={entries} /> : null}
+        {tab === 'stats' ? (
+          <StatsView
+            entries={entries}
+            cautions={visibleCautions}
+            onDismissFood={dismissFood}
+          />
+        ) : null}
       </main>
 
       <nav className="tab-bar" aria-label="주요 메뉴">
